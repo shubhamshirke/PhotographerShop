@@ -3,87 +3,91 @@ using Microsoft.EntityFrameworkCore;
 using PhotographerShop.FrameService.Data;
 using PhotographerShop.FrameService.Models;
 
-[ApiController]
-[Route("api/[controller]")]
-public class FramesController : ControllerBase
+namespace PhotographerShop.FrameService.Controllers
 {
-    private readonly FrameDbContext _context;
 
-    public FramesController(FrameDbContext context)
+    [ApiController]
+    [Route("api/[controller]")]
+    public class FramesController : ControllerBase
     {
-        _context = context;
-    }
+        private readonly FrameDbContext _context;
 
-    // ✅ GET: /api/frames
-    [HttpGet]
-    public async Task<IActionResult> GetAll()
-    {
-        var frames = await _context.Frames.ToListAsync();
-        return Ok(frames);
-    }
+        public FramesController(FrameDbContext context)
+        {
+            _context = context;
+        }
 
-    // ✅ GET: /api/frames/{id}
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetById(Guid id)
-    {
-        var frame = await _context.Frames.FindAsync(id);
+        // ✅ GET: /api/frames
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            var frames = await _context.Frames.ToListAsync();
+            return Ok(frames);
+        }
 
-        if (frame == null)
-            return NotFound();
+        // ✅ GET: /api/frames/{id}
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(Guid id)
+        {
+            var frame = await _context.Frames.FindAsync(id);
 
-        return Ok(frame);
-    }
+            if (frame == null)
+                return NotFound();
 
-    // ✅ POST: /api/frames
-    [HttpPost]
-    public async Task<IActionResult> Create([FromBody] Frame frame)
-    {
-        if (frame == null)
-            return BadRequest();
+            return Ok(frame);
+        }
 
-        _context.Frames.Add(frame);
-        await _context.SaveChangesAsync();
+        // ✅ POST: /api/frames
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] Frame frame)
+        {
+            if (frame == null)
+                return BadRequest();
 
-        return CreatedAtAction(nameof(GetById), new { id = frame.Id }, frame);
-    }
+            _context.Frames.Add(frame);
+            await _context.SaveChangesAsync();
 
-    // ✅ PUT: /api/frames/{id}
-    [HttpPut("{id}")]
-    public async Task<IActionResult> Update(Guid id, [FromBody] Frame updatedFrame)
-    {
-        if (id != updatedFrame.Id)
-            return BadRequest("ID mismatch");
+            return CreatedAtAction(nameof(GetById), new { id = frame.Id }, frame);
+        }
 
-        var existingFrame = await _context.Frames.FindAsync(id);
+        // ✅ PUT: /api/frames/{id}
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(Guid id, [FromBody] Frame updatedFrame)
+        {
+            if (id != updatedFrame.Id)
+                return BadRequest("ID mismatch");
 
-        if (existingFrame == null)
-            return NotFound();
+            var existingFrame = await _context.Frames.FindAsync(id);
 
-        // Update fields
-        existingFrame.Name = updatedFrame.Name;
-        existingFrame.Material = updatedFrame.Material;
-        existingFrame.Color = updatedFrame.Color;
-        existingFrame.Price = updatedFrame.Price;
-        existingFrame.ImageUrl = updatedFrame.ImageUrl;
-        existingFrame.IsAvailable = updatedFrame.IsAvailable;
+            if (existingFrame == null)
+                return NotFound();
 
-        await _context.SaveChangesAsync();
+            // Update fields
+            existingFrame.Name = updatedFrame.Name;
+            existingFrame.Material = updatedFrame.Material;
+            existingFrame.Color = updatedFrame.Color;
+            existingFrame.Price = updatedFrame.Price;
+            existingFrame.ImageUrl = updatedFrame.ImageUrl;
+            existingFrame.IsAvailable = updatedFrame.IsAvailable;
 
-        return NoContent();
-    }
+            await _context.SaveChangesAsync();
 
-    // ✅ DELETE: /api/frames/{id}
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> Delete(Guid id)
-    {
-        var frame = await _context.Frames.FindAsync(id);
+            return NoContent();
+        }
 
-        if (frame == null)
-            return NotFound();
+        // ✅ DELETE: /api/frames/{id}
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var frame = await _context.Frames.FindAsync(id);
 
-        _context.Frames.Remove(frame);
-        await _context.SaveChangesAsync();
+            if (frame == null)
+                return NotFound();
 
-        return NoContent();
+            _context.Frames.Remove(frame);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
     }
 }
