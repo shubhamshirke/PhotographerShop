@@ -21,10 +21,4 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="10.1.4" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="DTOs\" />
-    <Folder Include="Respositories\" />
-    <Folder Include="Services\" />
-  </ItemGroup>
-
 </Project>
